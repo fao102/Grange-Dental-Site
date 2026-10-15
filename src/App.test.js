@@ -1,23 +1,21 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import App from './App';
 
 describe('App Component', () => {
   test('renders the main heading', () => {
     render(<App />);
-    const headingElement = screen.getByText(
-      /Welcome to The Grange Dental Surgery/i
-    );
+    const headingElement = screen.getByText(/Dental care in Bermondsey/i);
     expect(headingElement).toBeInTheDocument();
   });
 
   test('renders the call button', () => {
     render(<App />);
-    const callButton = screen.getByRole('button', {
-      name: /📞 Call: 020 7394 1593/i,
+    const callButtons = screen.getAllByRole('button', {
+      name: /Call: 020 7394 1593/i,
     });
-    expect(callButton).toBeInTheDocument();
+    expect(callButtons.length).toBeGreaterThan(0);
   });
 
   test('renders navigation links', () => {
@@ -29,8 +27,8 @@ describe('App Component', () => {
 
   test('renders pricing information', () => {
     render(<App />);
-    expect(screen.getByText('NHS Dental Bands & Pricing')).toBeInTheDocument();
-    expect(screen.getByText('£27.90')).toBeInTheDocument();
+    expect(screen.getByText('NHS dental fees')).toBeInTheDocument();
+    expect(screen.getAllByText('£27.90').length).toBeGreaterThan(0);
     expect(screen.getByText('£76.60')).toBeInTheDocument();
     expect(screen.getByText('£332.10')).toBeInTheDocument();
   });
@@ -39,24 +37,24 @@ describe('App Component', () => {
     render(<App />);
     expect(screen.getByText('Get In Touch')).toBeInTheDocument();
     expect(screen.getByText('134 Grange Rd')).toBeInTheDocument();
-    expect(screen.getByText('020 7394 1593')).toBeInTheDocument();
+    expect(screen.getAllByText('020 7394 1593').length).toBeGreaterThan(0);
   });
 
   test('call button triggers phone link', () => {
-    // Mock window.location.href
-    const mockLocation = { href: '' };
-    Object.defineProperty(window, 'location', {
-      value: mockLocation,
-      writable: true,
-    });
-
     render(<App />);
-    const callButton = screen.getByRole('button', {
-      name: /📞 Call: 020 7394 1593/i,
+    const callButtons = screen.getAllByRole('button', {
+      name: /Call: 020 7394 1593/i,
     });
-    fireEvent.click(callButton);
+    callButtons.forEach(callButton => {
+      expect(callButton).toHaveAttribute('href', 'tel:02073941593');
+    });
+  });
 
-    expect(window.location.href).toBe('tel:02073941593');
+  test('practice email opens a new email message', () => {
+    render(<App />);
+    expect(
+      screen.getByRole('link', { name: 'thegrangedental@hotmail.com' })
+    ).toHaveAttribute('href', 'mailto:thegrangedental@hotmail.com');
   });
 
   test('Google Maps button is present', () => {
