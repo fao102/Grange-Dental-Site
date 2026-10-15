@@ -234,10 +234,9 @@ grange-dental-surgery/
 
 ## Security
 
-- Content Security Policy headers
-- HTTPS enforcement
-- No sensitive data in client-side code
-- Regular dependency updates
+- This repository does not configure HTTP security headers. Configure and verify a Content Security Policy and HTTPS behavior on the chosen hosting platform before launch.
+- The site does not require visitors to submit sensitive information through the frontend.
+- Review and update dependencies regularly; use `npm audit` to check for known advisories.
 
 ## Monitoring
 
